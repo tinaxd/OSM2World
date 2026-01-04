@@ -174,11 +174,13 @@ class O2WConverterImpl {
 		List<WorldModule> modules = createModuleList(config);
 
 		List<WorldModule> networkModules = modules.stream()
-				.filter(m -> m instanceof RoadModule || m instanceof RailwayModule || m instanceof AerowayModule)
+				.filter(m -> m instanceof RoadModule || m instanceof RailwayModule || m instanceof AerowayModule
+						|| m instanceof WaterModule || m instanceof CliffModule || m instanceof BarrierModule)
 				.toList();
 
 		List<WorldModule> otherModules = modules.stream()
-				.filter(m -> !(m instanceof RoadModule || m instanceof RailwayModule || m instanceof AerowayModule))
+				.filter(m -> !(m instanceof RoadModule || m instanceof RailwayModule || m instanceof AerowayModule
+						|| m instanceof WaterModule || m instanceof CliffModule || m instanceof BarrierModule))
 				.toList();
 
 		WorldCreator moduleManager = new WorldCreator(config, networkModules, otherModules);
