@@ -40,9 +40,9 @@ public class SimplePolygonXZ implements SimplePolygonShapeXZ {
 	 */
 	public SimplePolygonXZ(List<VectorXZ> vertexLoop) {
 
-		this.vertexLoop = vertexLoop;
+		this.vertexLoop = cleanupVertexLoop(vertexLoop);
 
-		assertLoopProperty(vertexLoop);
+		assertLoopProperty(this.vertexLoop);
 		assertLoopLength(vertexLoop);
 		assertNotSelfIntersecting(vertexLoop);
 		assertNoDuplicates(vertexLoop);
@@ -711,6 +711,27 @@ public class SimplePolygonXZ implements SimplePolygonShapeXZ {
 		} else if (getArea() < 1e-6) {
 			throw new InvalidGeometryException("Very small polygon area: " + area);
 		}
+	}
+
+	private static List<VectorXZ> cleanupVertexLoop(List<VectorXZ> vertexLoop) {
+
+		assertLoopProperty(vertexLoop);
+
+		List<VectorXZ> cleaned = new ArrayList<>(vertexLoop.size());
+		cleaned.add(vertexLoop.get(0));
+
+		for (int i = 1; i < vertexLoop.size(); i++) {
+			if (!vertexLoop.get(i).equals(vertexLoop.get(i-1))) {
+				cleaned.add(vertexLoop.get(i));
+			}
+		}
+
+		if (cleaned.size() > 1 && cleaned.get(0).equals(cleaned.get(cleaned.size()-1))) {
+			return cleaned;
+		} else {
+			return vertexLoop;
+		}
+
 	}
 
 }
