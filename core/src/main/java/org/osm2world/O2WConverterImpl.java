@@ -171,7 +171,19 @@ class O2WConverterImpl {
 		//this will cause problems if multiple conversions are run
 		//at the same time, because global variables are being modified
 
-		WorldCreator moduleManager = new WorldCreator(config, createModuleList(config));
+		List<WorldModule> modules = createModuleList(config);
+
+		List<WorldModule> networkModules = modules.stream()
+				.filter(m -> m instanceof RoadModule || m instanceof RailwayModule || m instanceof AerowayModule
+						|| m instanceof WaterModule || m instanceof CliffModule || m instanceof BarrierModule)
+				.toList();
+
+		List<WorldModule> otherModules = modules.stream()
+				.filter(m -> !(m instanceof RoadModule || m instanceof RailwayModule || m instanceof AerowayModule
+						|| m instanceof WaterModule || m instanceof CliffModule || m instanceof BarrierModule))
+				.toList();
+
+		WorldCreator moduleManager = new WorldCreator(config, networkModules, otherModules);
 		moduleManager.addRepresentationsTo(mapData);
 
 		/* determine elevations */

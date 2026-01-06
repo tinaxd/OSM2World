@@ -11,21 +11,24 @@ import org.osm2world.world.network.NetworkCalculator;
 
 public class WorldCreator {
 
-	private List<? extends WorldModule> modules;
+	private final List<WorldModule> networkModules;
+	private final List<WorldModule> otherModules;
 
-	public WorldCreator(@Nullable O2WConfig config, WorldModule... modules) {
-		this(config, Arrays.asList(modules));
-	}
+	public WorldCreator(@Nullable O2WConfig config,
+			List<WorldModule> networkModules, List<WorldModule> otherModules) {
 
-	public WorldCreator(@Nullable O2WConfig config, List<? extends WorldModule> modules) {
-
-		this.modules = modules;
+		this.networkModules = networkModules;
+		this.otherModules = otherModules;
 
 		if (config == null) {
 			config = new O2WConfig();
 		}
 
-		for (WorldModule module : modules) {
+		for (WorldModule module : networkModules) {
+			module.setConfiguration(config);
+		}
+
+		for (WorldModule module : otherModules) {
 			module.setConfiguration(config);
 		}
 
@@ -33,11 +36,15 @@ public class WorldCreator {
 
 	public void addRepresentationsTo(MapData mapData) {
 
-		for (WorldModule module : modules) {
+		for (WorldModule module : networkModules) {
 			module.applyTo(mapData);
 		}
 
 		NetworkCalculator.calculateNetworkInformationInMapData(mapData);
+
+		for (WorldModule module : otherModules) {
+			module.applyTo(mapData);
+		}
 
 	}
 
