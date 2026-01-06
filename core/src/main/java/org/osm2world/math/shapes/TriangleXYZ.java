@@ -23,7 +23,7 @@ public class TriangleXYZ implements FlatSimplePolygonShapeXYZ {
 		this.v2 = v2;
 		this.v3 = v3;
 
-		if (getArea() < 1e-6) {
+		if (getArea() < 1e-9) {
 			// degenerate triangle: all three points are (almost, to account for floating point arithmetic) in a line
 			throw new InvalidGeometryException("Degenerate triangle: " + v1 + ", " + v2 + ", " + v3);
 		}
